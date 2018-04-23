@@ -54,7 +54,23 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.time.setText("");
         }
         viewHolder.device.setText(chatMessage.getDevice().concat(":"));
-        viewHolder.message.setText(chatMessage.getMessage());
+        //viewHolder.device.setText(chatMessage.getMessage());
+        // CONVERT VALUES TO PERCENTAGES
+        double convertedMessage;
+        String finalMessage = "1";
+        if (chatMessage.getMessage().charAt(0) == '-'){
+            convertedMessage = 0;
+        }
+        else{
+            finalMessage = chatMessage.getMessage();
+            finalMessage = finalMessage.replaceAll("\\D+","");
+            convertedMessage = Double.parseDouble(finalMessage);
+            convertedMessage = convertedMessage/1000;
+        }
+        finalMessage = Double.toString(convertedMessage);
+        viewHolder.message.setText(finalMessage);
+
+
         // Return the completed to render on screen
         return convertView;
     }
