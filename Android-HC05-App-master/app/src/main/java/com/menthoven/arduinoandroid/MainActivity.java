@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     BluetoothDevicesAdapter bluetoothDevicesAdapter;
 
+
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.devices_list_view)
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override protected void onStart() {
         super.onStart();
-
+        ImageChangingActivity imageChanger;
         Log.d(Constants.TAG, "Registering receiver");
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
