@@ -1,6 +1,8 @@
 package com.menthoven.arduinoandroid;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,5 +123,9 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         double distance = ((tempFactor + tempHumid)/2)*weight;
         distance = distance/100;
         return distance;
+    }
+
+    public double getConvertedWeight(){
+        return convertedWeight;
     }
 }

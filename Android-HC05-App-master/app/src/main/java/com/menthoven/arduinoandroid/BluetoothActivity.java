@@ -1,5 +1,6 @@
 package com.menthoven.arduinoandroid;
 
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -12,6 +13,7 @@ import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -55,7 +57,7 @@ public class BluetoothActivity extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
 
     MenuItem reconnectButton;
-    ChatAdapter chatAdapter;
+    public ChatAdapter chatAdapter;
 
     Snackbar snackTurnOn;
 
@@ -132,6 +134,18 @@ public class BluetoothActivity extends AppCompatActivity {
 
         bluetoothService.connect();
         Log.d(Constants.TAG, "Connecting");
+
+        //if (chatAdapter.getConvertedWeight() >= 20){
+       /*     NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.waterdrop)
+                            .setContentTitle("Hiking Buddy")
+                            .setContentText("You are running low on water!");
+            //.setContentIntent(pendingIntent); //Required on Gingerbread and below
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(123, mBuilder.build());*/
+        //}
     }
 
     @Override protected void onStop() {
@@ -158,7 +172,6 @@ public class BluetoothActivity extends AppCompatActivity {
                         }).show();
             }
         }
-
     }
 
 
@@ -260,6 +273,18 @@ public class BluetoothActivity extends AppCompatActivity {
                 chatListView.smoothScrollToPosition(chatAdapter.getCount() - 1);
             }
         });
+        //NOTIFY IF WATER LEVEL IS LOW
+        if (chatAdapter.getConvertedWeight() <= 20) {
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.waterdrop)
+                            .setContentTitle("Hiking Buddy")
+                            .setContentText("You are running low on water!");
+            //.setContentIntent(pendingIntent); //Required on Gingerbread and below
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(123, mBuilder.build());
+        }
     }
 
     @Override

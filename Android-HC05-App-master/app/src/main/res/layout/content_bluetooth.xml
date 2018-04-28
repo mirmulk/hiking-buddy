@@ -41,11 +41,6 @@
         android:layout_height="wrap_content"
         android:text="Next Image" />
 
-    <ImageView
-        android:id="@+id/imageDisplay"
-        android:layout_width="353dp"
-        android:layout_height="204dp" />
-
     <ListView
         android:id="@+id/chat_list_view"
         android:layout_width="match_parent"
