@@ -82,41 +82,30 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
 
             // PARSE AND CONVERT TEMPERATURE
-            if (chatMessage.getMessage().charAt(0) == '-'){
-                convertedTemp = 0;
-            }
-            else{
-                initTemp = chatMessage.getMessage();
-                initTemp = initTemp.substring(initTemp.indexOf("W") + 1);
-                initTemp = initTemp.substring(0, initTemp.indexOf("T"));
-                initTemp = initTemp.replaceAll("\\D+","");
-                convertedTemp = Double.parseDouble(initTemp);
-                convertedTemp = convertedTemp/100;
-            }
+            initTemp = chatMessage.getMessage();
+            initTemp = initTemp.substring(initTemp.indexOf("W") + 1);
+            initTemp = initTemp.substring(0, initTemp.indexOf("T"));
+            initTemp = initTemp.replaceAll("\\D+","");
+            convertedTemp = Double.parseDouble(initTemp);
+            convertedTemp = convertedTemp/100;
             finalTemp = Double.toString(convertedTemp);
             viewHolder.device.setText(finalTemp);
 
 
             // PARSE AND CONVERT HUMIDITY
-            if (chatMessage.getMessage().charAt(0) == '-'){
-                convertedHumid = 0;
-            }
-            else{
-                initHumid = chatMessage.getMessage();
-                initHumid = initHumid.substring(initHumid.indexOf("T") + 1);
-                initHumid = initHumid.substring(0, initHumid.indexOf("H"));
-                initHumid = initHumid.replaceAll("\\D+","");
-                convertedHumid = Double.parseDouble(initHumid);
-                convertedHumid = convertedHumid/100;
-            }
+            initHumid = chatMessage.getMessage();
+            initHumid = initHumid.substring(initHumid.indexOf("T") + 1);
+            initHumid = initHumid.substring(0, initHumid.indexOf("H"));
+            initHumid = initHumid.replaceAll("\\D+","");
+            convertedHumid = Double.parseDouble(initHumid);
+            convertedHumid = convertedHumid/100;
             finalHumid = Double.toString(convertedHumid);
             //viewHolder.message.setText(finalHumid);
         }
-        catch (StringIndexOutOfBoundsException e){
-            System.err.println("StringIndexOutOfBoundsException: " + e.getMessage());
+        catch (StringIndexOutOfBoundsException | NumberFormatException e){
         }
 
-
+        //calculate the remaining distance
         distance = distanceCalc(convertedWeight, convertedTemp, convertedHumid);
         viewHolder.message.setText(Double.toString(distance));
 
