@@ -134,18 +134,6 @@ public class BluetoothActivity extends AppCompatActivity {
 
         bluetoothService.connect();
         Log.d(Constants.TAG, "Connecting");
-
-        //if (chatAdapter.getConvertedWeight() >= 20){
-       /*     NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.waterdrop)
-                            .setContentTitle("Hiking Buddy")
-                            .setContentText("You are running low on water!");
-            //.setContentIntent(pendingIntent); //Required on Gingerbread and below
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(123, mBuilder.build());*/
-        //}
     }
 
     @Override protected void onStop() {
@@ -285,6 +273,22 @@ public class BluetoothActivity extends AppCompatActivity {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(123, mBuilder.build());
         }
+
+        //DISPLAY WATER WEIGHT
+        TextView textView = (TextView)findViewById(R.id.Weight);
+        textView.setText("Water Level: " + Double.toString(chatAdapter.getAverageWeightFinal()) + " %");
+
+        //DISPLAY WATER WEIGHT
+        TextView textView2 = (TextView)findViewById(R.id.Distance);
+        textView2.setText("Distance remaining: " + Double.toString(chatAdapter.getDistance()) + " miles");
+
+        //DISPLAY WATER WEIGHT
+        TextView textView3 = (TextView)findViewById(R.id.Temperature);
+        textView3.setText("Temperature: " + Double.toString(chatAdapter.getAverageTempFinal()) + " C");
+
+        //DISPLAY WATER WEIGHT
+        TextView textView4 = (TextView)findViewById(R.id.Humidity);
+        textView4.setText("Humidity: " + Double.toString(chatAdapter.getAverageHumidFinal()) + " %");
     }
 
     @Override

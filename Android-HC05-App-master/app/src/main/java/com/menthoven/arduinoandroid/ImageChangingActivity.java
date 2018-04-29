@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import butterknife.Bind;
 
 public class ImageChangingActivity extends Activity {
-
+/*
     private Integer images[] = {R.drawable.waterdrop, R.drawable.waterdrop75, R.drawable.waterdrop50};
     private int currImage = 0;
 
@@ -49,5 +49,5 @@ public class ImageChangingActivity extends Activity {
         final ImageView imageView = (ImageView) findViewById(R.id.imageDisplay);
         imageView.setImageResource(images[currImage]);
 
-    }
+    }*/
 }

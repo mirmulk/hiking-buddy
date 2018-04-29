@@ -30,8 +30,28 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
 
     public double distance;
 
+    public double [] weightArray = new double [10];
+    int w = 0;
+    public double [] distaneArray = new double [10];
+    int d = 0;
+    public double [] tempArray = new double [10];
+    int t = 0;
+    public double [] humidArray = new double [10];
+    int h = 0;
+
+    public double averageWeight;
+    public double averageDistance;
+    public double averageTemp;
+    public double averageHumid;
+
+    public double averageWeightFinal;
+    public double averageDistanceFinal;
+    public double averageTempFinal;
+    public double averageHumidFinal;
+
     // View lookup cache
     static class ViewHolder {
+
 
         @Bind(R.id.time_text_view) TextView time;
         @Bind(R.id.device_text_view) TextView device;
@@ -72,12 +92,40 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         try{
             if (chatMessage.getMessage().charAt(0) == '-'){
                 convertedWeight = 0;
+
+                if(w < 10){
+                    weightArray[w] = convertedWeight;
+                    w++;
+                }
+                else{
+                    w = 0;
+                    for (int i = 0; i < 10; i++){
+                        averageWeight = averageWeight + weightArray[i];
+                    }
+                    averageWeightFinal = averageWeight/10;
+                    averageWeight = 0;
+                    weightArray = new double [10];
+                }
             }
             else{
                 initWeight = chatMessage.getMessage().split("W")[0];
                 initWeight = initWeight.replaceAll("\\D+","");
                 convertedWeight = Double.parseDouble(initWeight);
                 convertedWeight = convertedWeight /200;
+
+                if(w < 10){
+                    weightArray[w] = convertedWeight;
+                    w++;
+                }
+                else{
+                    w = 0;
+                    for (int i = 0; i < 10; i++){
+                        averageWeight = averageWeight + weightArray[i];
+                    }
+                    averageWeightFinal = averageWeight/10;
+                    averageWeight = 0;
+                    weightArray = new double [10];
+                }
             }
             finalWeight = Double.toString(convertedWeight);
             viewHolder.time.setText(finalWeight);
@@ -90,6 +138,20 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
             initTemp = initTemp.replaceAll("\\D+","");
             convertedTemp = Double.parseDouble(initTemp);
             convertedTemp = convertedTemp/100;
+
+            if(t < 10){
+               tempArray[t] = convertedTemp;
+                t++;
+            }
+            else{
+                t = 0;
+                for (int i = 0; i < 10; i++){
+                    averageTemp = averageTemp + tempArray[i];
+                }
+                averageTempFinal = averageTemp/10;
+                averageTemp = 0;
+                tempArray = new double [10];
+            }
             finalTemp = Double.toString(convertedTemp);
             viewHolder.device.setText(finalTemp);
 
@@ -101,6 +163,20 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
             initHumid = initHumid.replaceAll("\\D+","");
             convertedHumid = Double.parseDouble(initHumid);
             convertedHumid = convertedHumid/100;
+
+            if(h < 10){
+                humidArray[h] = convertedHumid;
+                h++;
+            }
+            else{
+                h = 0;
+                for (int i = 0; i < 10; i++){
+                    averageHumid = averageHumid + humidArray[i];
+                }
+                averageHumidFinal = averageHumid/10;
+                averageHumid = 0;
+                humidArray = new double [10];
+            }
             finalHumid = Double.toString(convertedHumid);
             //viewHolder.message.setText(finalHumid);
         }
@@ -108,7 +184,7 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
         }
 
         //calculate the remaining distance
-        distance = distanceCalc(convertedWeight, convertedTemp, convertedHumid);
+        distance = distanceCalc(averageWeightFinal, averageTempFinal, averageHumidFinal);
         viewHolder.message.setText(Double.toString(distance));
 
         // Return the completed to render on screen
@@ -128,4 +204,32 @@ public class ChatAdapter extends ArrayAdapter<ChatMessage> {
     public double getConvertedWeight(){
         return convertedWeight;
     }
+
+    public double getDistance(){
+        return distance;
+    }
+
+    public double getConvertedTemp(){
+        return convertedTemp;
+    }
+    public double getConvertedHumid(){
+        return convertedHumid;
+    }
+
+    public double getAverageWeightFinal(){
+        return averageWeightFinal;
+    }
+
+    public double getAverageDistanceFinal(){
+        return averageDistanceFinal;
+    }
+
+    public double getAverageTempFinal(){
+        return averageTempFinal;
+    }
+    public double getAverageHumidFinal(){
+        return averageHumidFinal;
+    }
+
+
 }
