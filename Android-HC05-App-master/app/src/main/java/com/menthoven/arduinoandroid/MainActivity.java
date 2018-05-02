@@ -77,10 +77,12 @@ public class MainActivity extends AppCompatActivity {
                         toolbarProgressCircle.setVisibility(View.INVISIBLE);
 
                         Intent intent = new Intent(MainActivity.this, BluetoothActivity.class);
+                        //Intent intent1 = new Intent(MainActivity.this, SimplePedometerActivity.class);
 
                         intent.putExtra(Constants.EXTRA_DEVICE, device);
 
                         startActivity(intent);
+                        //startActivity(intent1);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

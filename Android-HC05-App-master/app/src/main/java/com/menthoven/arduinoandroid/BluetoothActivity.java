@@ -7,6 +7,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,15 +39,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BluetoothActivity extends AppCompatActivity {
+public class BluetoothActivity extends AppCompatActivity implements SensorEventListener, StepListener{
 
 
     BluetoothService bluetoothService;
     BluetoothDevice device;
 
-    @Bind(R.id.edit_text)
-    EditText editText;
-    @Bind(R.id.send_button)
+    //@Bind(R.id.edit_text)
+    //EditText editText;
+    //@Bind(R.id.send_button)
     Button sendButton;
     @Bind(R.id.chat_list_view)
     ListView chatListView;
@@ -64,7 +68,13 @@ public class BluetoothActivity extends AppCompatActivity {
     private boolean showMessagesIsChecked = true;
     private boolean autoScrollIsChecked = true;
     public static boolean showTimeIsChecked = true;
+    private SimpleStepDetector simpleStepDetector;
+    private SensorManager sensorManager;
+    private Sensor accel;
+    private static final String TEXT_NUM_STEPS = "Number of Steps: ";
+    private int numSteps;
 
+    /*
     @OnClick(R.id.send_button) void send() {
         // Send a item_message using content of the edit text widget
         String message = editText.getText().toString();
@@ -75,7 +85,7 @@ public class BluetoothActivity extends AppCompatActivity {
             editText.setText("");
         }
     }
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +93,7 @@ public class BluetoothActivity extends AppCompatActivity {
 
 
         ButterKnife.bind(this);
-
+/*
         editText.setError("Enter text first");
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -95,7 +105,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+*/
         snackTurnOn = Snackbar.make(coordinatorLayout, "Bluetooth turned off", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Turn On", new View.OnClickListener() {
                     @Override public void onClick(View v) {
@@ -124,6 +134,11 @@ public class BluetoothActivity extends AppCompatActivity {
         bluetoothService = new BluetoothService(handler, device);
 
         setTitle(device.getName());
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        simpleStepDetector = new SimpleStepDetector();
+        simpleStepDetector.registerListener(this);
     }
 
     @Override protected void onStart() {
@@ -278,17 +293,21 @@ public class BluetoothActivity extends AppCompatActivity {
         TextView textView = (TextView)findViewById(R.id.Weight);
         textView.setText("Water Level: " + Double.toString(chatAdapter.getAverageWeightFinal()) + " %");
 
-        //DISPLAY WATER WEIGHT
+        //DISPLAY DISTANCE REMAINING
         TextView textView2 = (TextView)findViewById(R.id.Distance);
         textView2.setText("Distance remaining: " + Double.toString(chatAdapter.getDistance()) + " miles");
 
-        //DISPLAY WATER WEIGHT
+        //DISPLAY TEMPERATURE
         TextView textView3 = (TextView)findViewById(R.id.Temperature);
         textView3.setText("Temperature: " + Double.toString(chatAdapter.getAverageTempFinal()) + " C");
 
-        //DISPLAY WATER WEIGHT
+        //DISPLAY HUMIDITY
         TextView textView4 = (TextView)findViewById(R.id.Humidity);
         textView4.setText("Humidity: " + Double.toString(chatAdapter.getAverageHumidFinal()) + " %");
+
+        //DISPLAY DISTANCE
+        TextView textView5 = (TextView)findViewById(R.id.Pedo);
+        textView5.setText("Distance Walked: " + numSteps + "steps");
     }
 
     @Override
@@ -365,6 +384,40 @@ public class BluetoothActivity extends AppCompatActivity {
         reconnectButton.setVisible(false);
         bluetoothService.stop();
         bluetoothService.connect();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //numSteps = 0;
+        //textView.setText(TEXT_NUM_STEPS + numSteps);
+        //DISPLAY HUMIDITY
+
+        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            simpleStepDetector.updateAccel(
+                    event.timestamp, event.values[0], event.values[1], event.values[2]);
+        }
+    }
+
+    @Override
+    public void step(long timeNs) {
+        numSteps++;
+        //textView.setText(TEXT_NUM_STEPS + numSteps);
     }
 
 }
